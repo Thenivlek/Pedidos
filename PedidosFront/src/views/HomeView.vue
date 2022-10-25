@@ -5,7 +5,7 @@
         <img
           alt="Vue logo"
           class="logo"
-          src="@/assets/logo.svg"
+          src="../assets/logo.png"
           width="125"
           height="125"
         />
@@ -53,10 +53,12 @@
 <script>
 import axios from "axios";
 import CryptoJS from "crypto-js";
+import { RouterLink, RouterView } from "vue-router";
+
 //var CryptoJS = require("crypto-js");
 
 export default {
-  name: "login",
+  name: "HomeView",
   data() {
     return {
       email: "",
@@ -64,7 +66,7 @@ export default {
       httpValidation: "http://localhost:6060/posts/user",
     };
   },
-  async created() {},
+  //async created() {},
   methods: {
     async ValidationUser() {
       if (!!this.email == false || !!this.password == false) {
@@ -87,6 +89,7 @@ export default {
         const validation = axios
           .post(this.httpValidation, param)
           .then((response) => {
+            console.log(response);
             const dataResponse = {
               data: response.data,
               status: response.status,
@@ -110,6 +113,7 @@ export default {
       sessionStorage.setItem("email", user.email);
       sessionStorage.setItem("auth", user.authLogin);
       sessionStorage.setItem("encryptedKey", user.encrypted);
+      this.RouterLink.push("/painel");
     },
   },
 };

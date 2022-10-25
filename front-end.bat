@@ -1,0 +1,2 @@
+cd pedidosfront
+yarn serve
