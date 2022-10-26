@@ -34,6 +34,7 @@
             v-model.trim="password"
           />
         </Transition>
+
         <button @click="ValidationUser()" class="button marginP">Login</button>
       </div>
     </div>
@@ -89,7 +90,6 @@ export default {
         const validation = axios
           .post(this.httpValidation, param)
           .then((response) => {
-            console.log(response);
             const dataResponse = {
               data: response.data,
               status: response.status,
@@ -113,7 +113,7 @@ export default {
       sessionStorage.setItem("email", user.email);
       sessionStorage.setItem("auth", user.authLogin);
       sessionStorage.setItem("encryptedKey", user.encrypted);
-      this.RouterLink.push("/painel");
+      this.$router.push("painel");
     },
   },
 };

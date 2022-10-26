@@ -1,22 +1,34 @@
 <template id="app">
-  <HomeView />
+  <nav>
+    <transition name="slide-fade">
+      <router-view> </router-view>
+    </transition>
+  </nav>
 </template>
 
 <script>
-import { RouterLink, RouterView } from "vue-router";
-import HomeView from "./views/HomeView";
 export default {
   data() {
-    return {};
-  },
-  components: {
-    HomeView,
+    return {
+      id: sessionStorage.id,
+    };
   },
 };
 </script>
 
-<style scoped>
-#app {
-  background: black;
+<style>
+@import url("./app.css");
+.slide-fade-enter-active {
+  transition: all 0.3s ease-out;
+}
+
+.slide-fade-leave-active {
+  transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);
+}
+
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+  transform: translateX(20px);
+  opacity: 0;
 }
 </style>
