@@ -67,7 +67,14 @@ export default {
       httpValidation: "http://localhost:6060/posts/user",
     };
   },
-  //async created() {},
+  async created() {
+    //const email = sessionStorage.email;
+    //const password = sessionStorage.encryptedKey;
+    //if (email.length > 0 && password.length > 0) {
+    //  this.email = email;
+    //  this.password = password
+    //}
+  },
   methods: {
     async ValidationUser() {
       if (!!this.email == false || !!this.password == false) {
@@ -89,13 +96,13 @@ export default {
 
         const validation = axios
           .post(this.httpValidation, param)
-          .then((response) => {
+          .then(async (response) => {
             const dataResponse = {
               data: response.data,
               status: response.status,
             };
             if (response.status == 200 && !!dataResponse.data.id == true) {
-              this.Login(response.data);
+              await this.Login(response.data);
             }
           })
           .catch((error) => {

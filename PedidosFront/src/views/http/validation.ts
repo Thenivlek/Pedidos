@@ -3,16 +3,10 @@ import CryptoJS from "crypto-js";
 const httpValidation = "http://localhost:6060/posts/user";
 
 export default {
-  async ValidationUser() {
-    let retorno = {
-      dados: "",
-      status: 500,
-    };
-    const password = sessionStorage.encryptedKey;
-    const email = sessionStorage.email;
-
-    if (!!email == false || !!password == false) {
-      retorno = {
+  //Confere se o usuário existe no back-End
+  async ValidationUser(email = String, password = String) {
+    if (email.length == 0 || password.length == 0) {
+      return {
         dados: "Usuário não encontrado",
         status: 500,
       };
@@ -21,25 +15,21 @@ export default {
         email.toString(),
         "projetoTeste"
       ).toString();
-      const p = await CryptoJS.AES.encrypt(
-        password.toString(),
-        "projetoTeste"
-      ).toString();
+      //const p = CryptoJS.AES.encrypt(password.toString(), "projetoTeste");
 
       const param = {
         email: e,
-        password: p,
+        password: password,
       };
-
-      const validation = axios
+      return await axios
         .post(httpValidation, param)
         .then((response) => {
           const dataResponse = {
             data: response.data,
             status: response.status,
           };
-          if (response.status == 200 && !!dataResponse.data.id == true) {
-            retorno = {
+          if (response.status == 200 && !!response.data.id == true) {
+            return {
               dados: response.data,
               status: response.status,
             };
@@ -50,12 +40,11 @@ export default {
           sessionStorage.removeItem("email");
           sessionStorage.removeItem("encryptedKey");
           sessionStorage.removeItem("auth");
-          retorno = {
+          return {
             dados: "Usuário e/ou senha incorretos!",
             status: 500,
           };
         });
     }
-    return retorno;
   },
 };

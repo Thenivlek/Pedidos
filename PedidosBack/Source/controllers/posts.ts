@@ -45,10 +45,12 @@ const getAuth = async (req: Request, res: Response, next: NextFunction) => {
       credenciais.password,
       "projetoTeste"
     );
-    let originalPassWord = bytesPassword.toString(CryptoJS.enc.Utf8);
+    const originalPassWord = bytesPassword.toString(CryptoJS.enc.Utf8);
+    console.log("PASSWORD", originalPassWord);
 
     let bytesEmail = CryptoJS.AES.decrypt(credenciais.email, "projetoTeste");
-    let originalEmail = bytesEmail.toString(CryptoJS.enc.Utf8);
+    const originalEmail = bytesEmail.toString(CryptoJS.enc.Utf8);
+    console.log("EMAIL ->", originalEmail);
     //Busca do usuário nos usuários criados no node
     const find = users.find((e) => {
       return originalEmail == e.email && originalPassWord == e.password;
@@ -61,10 +63,10 @@ const getAuth = async (req: Request, res: Response, next: NextFunction) => {
     } else if (find != undefined) {
       //Se achar é criptografado a senha e enviado de volta.
       //Estava tendo problemas com Else do TS, por isso decidi optar pelo else if()
-      let em = find.email;
+      let em = find.password;
       let enc = await CryptoJS.AES.encrypt(
         em.toString(),
-        "senhaEnc" //Optei por outra palavra chave por segurança
+        "projetoTeste" //Optei por outra palavra chave por segurança
       ).toString();
 
       res.send({

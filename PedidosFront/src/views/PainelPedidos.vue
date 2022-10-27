@@ -1,6 +1,21 @@
 <template>
   <div>
-    <h1 class="title">Painel pedidos</h1>
+    <div class="row items-center">
+      <h1 class="title margin1">Painel pedidos</h1>
+
+      <button
+        @click="AddPedido()"
+        class="bg-primary black float-right margin1 button-add"
+      >
+        Novo Item
+      </button>
+      <button
+        @click="AdicionaProduto()"
+        class="bg-primary black float-right margin1 button-add"
+      >
+        Novo Produto
+      </button>
+    </div>
   </div>
 </template>
 
@@ -13,21 +28,31 @@ export default defineComponent({
   name: "PainelPedidos",
   data() {
     return {
-      user_id: sessionStorage.id,
-      email: sessionStorage.id,
+      id: sessionStorage.id,
+      email: sessionStorage.email,
+      auth: sessionStorage.auth,
+      encryptedKey: sessionStorage.encryptedKey,
     };
   },
-
   async created() {
-    if (!!this.user_id && !!this.email) {
-      const validado = await Validation.ValidationUser();
-      console.log("Validado", validado);
+    if (!!this.id == false || !!this.email == false) {
+      alert("Sessão expirada faça o login novamente!");
+      this.$router.push("/");
+    }
+  },
+
+  async mounted() {
+    if (!!this.id && !!this.email) {
+      let validado = await Validation.ValidationUser(
+        this.email,
+        this.encryptedKey
+      );
+      validado == undefined ? (validado = { status: 500, dados: "" }) : "";
 
       if (validado.status == 500) {
         sessionStorage.removeItem("id");
         sessionStorage.removeItem("email");
         sessionStorage.removeItem("encryptedKey");
-        console.log("deuruim");
         await funcoes.sleep(2000);
         alert("Sessão expirada faça o login novamente!");
         this.$router.push("/");
@@ -38,13 +63,17 @@ export default defineComponent({
     //sessionStorage.removeItem("auth");
   },
 
-  methods: {},
+  methods: {
+    AdicionaProduto() {
+      this.$router.push("products");
+    },
+    AddPedido() {
+      alert("Adicionando novo pedido");
+    },
+  },
 });
 </script>
 
 <style>
-.title {
-  font-size: 26px;
-  text-align: left;
-}
+@import url("./Views.css");
 </style>
