@@ -25,6 +25,12 @@ const users = [
   },
 ];
 
+interface Produtos {
+  id: number;
+  cd_categoria: string;
+  nm_produto: string;
+  vl_produto: number;
+}
 interface Post {
   userId: Number;
   id: Number;
@@ -32,6 +38,9 @@ interface Post {
   body: String;
 }
 
+const Produtos: Array<Produtos> = [];
+
+//Verifica a autorização---------------------------------------------
 const getAuth = async (req: Request, res: Response, next: NextFunction) => {
   const credenciais = req.body;
 
@@ -80,19 +89,19 @@ const getAuth = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-// getting all posts
-const getPosts = async (req: Request, res: Response, next: NextFunction) => {
-  // get some posts
-  let result: AxiosResponse = await axios.get(
-    `https://jsonplaceholder.typicode.com/posts`
-  );
-  let posts: [Post] = result.data;
-  return res.status(200).json({
-    message: posts,
-  });
+//Retorna todos os produtos da base--------------------------------------
+const getProducts = async (req: Request, res: Response, next: NextFunction) => {
+  console.log("PRODUTOS", Produtos);
+  if (Produtos.length > 0) {
+    res.send(Produtos);
+    res.end();
+  } else {
+    res.send({ dados: "Nenhum produto encontrado", status: 500 });
+    res.end();
+  }
 };
 
-// getting a single post
+// getting a single post---------------------------------------------
 const getPost = async (req: Request, res: Response, next: NextFunction) => {
   // get the post id from the req
   let id: string = req.params.id;
@@ -106,7 +115,7 @@ const getPost = async (req: Request, res: Response, next: NextFunction) => {
   });
 };
 
-// updating a post
+// updating a post---------------------------------------------
 const updatePost = async (req: Request, res: Response, next: NextFunction) => {
   // get the post id from the req.params
   let id: string = req.params.id;
@@ -127,7 +136,7 @@ const updatePost = async (req: Request, res: Response, next: NextFunction) => {
   });
 };
 
-// deleting a post
+// deleting a post---------------------------------------------
 const deletePost = async (req: Request, res: Response, next: NextFunction) => {
   // get the post id from req.params
   let id: string = req.params.id;
@@ -141,23 +150,58 @@ const deletePost = async (req: Request, res: Response, next: NextFunction) => {
   });
 };
 
-// adding a post
-const addPost = async (req: Request, res: Response, next: NextFunction) => {
-  // get the data from req.body
-  let title: string = req.body.title;
-  let body: string = req.body.body;
-  // add the post
-  let response: AxiosResponse = await axios.post(
-    `https://jsonplaceholder.typicode.com/posts`,
-    {
-      title,
-      body,
+// Adicionando um produto novo---------------------------------------------
+const addProduct = async (req: Request, res: Response, next: NextFunction) => {
+  // get data from req.body
+
+  let produto = {
+    id: 0,
+    nm_produto: req.body.nm_produto,
+    vl_produto: req.body.vl_produto,
+    cd_categoria: req.body.cd_categoria,
+  };
+
+  //Verifica se existe algum produto sem informação
+  if (!!produto.nm_produto || !!produto.vl_produto || produto.cd_categoria) {
+    try {
+      //Pega o próximo id disponível
+      produto.id = getFinalId() + 1;
+      Produtos.push(produto);
+      res.status(200).send(produto);
+      res.end();
+    } catch (error) {
+      //Caso haja algum erro
+      res.status(500).send("Não foi possível adicionar um novo produto!");
+      res.end();
     }
-  );
-  // return response
-  return res.status(200).json({
-    message: response.data,
-  });
+  } else {
+    //Caso falte parâmetros
+    res.status(500).send("Faltam informações de cadastro do produto!");
+    res.end();
+  }
 };
 
-export default { getPosts, getPost, updatePost, deletePost, addPost, getAuth };
+//Busca o ultimo Id de produto cadastrado
+function getFinalId() {
+  let final = 0;
+  //Verifica se existe algum produto, se não existir retorna o id = 0
+  if (Produtos.length == 0) {
+    final = 0;
+  } else {
+    final = Produtos[Produtos.length - 1].id;
+  }
+  //Tratamento de erro
+  if (final == null || final == undefined) {
+    final = 0;
+  }
+  return final;
+}
+
+export default {
+  getProducts,
+  getPost,
+  updatePost,
+  deletePost,
+  addProduct,
+  getAuth,
+};
