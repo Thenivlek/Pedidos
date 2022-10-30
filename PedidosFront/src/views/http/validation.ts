@@ -24,10 +24,10 @@ export default {
       return await axios
         .post(httpValidation, param)
         .then((response) => {
-          const dataResponse = {
-            data: response.data,
-            status: response.status,
-          };
+          //const dataResponse = {
+          //  data: response.data,
+          //  status: response.status,
+          //};
           if (response.status == 200 && !!response.data.id == true) {
             return {
               dados: response.data,
@@ -36,6 +36,7 @@ export default {
           }
         })
         .catch((error) => {
+          console.log(error);
           sessionStorage.removeItem("id");
           sessionStorage.removeItem("email");
           sessionStorage.removeItem("encryptedKey");

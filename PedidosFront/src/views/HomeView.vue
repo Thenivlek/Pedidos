@@ -54,7 +54,7 @@
 <script>
 import axios from "axios";
 import CryptoJS from "crypto-js";
-import { RouterLink, RouterView } from "vue-router";
+//import { RouterLink, RouterView } from "vue-router";
 
 //var CryptoJS = require("crypto-js");
 
@@ -94,7 +94,7 @@ export default {
           password: p,
         };
 
-        const validation = axios
+        axios
           .post(this.httpValidation, param)
           .then(async (response) => {
             const dataResponse = {
@@ -106,6 +106,7 @@ export default {
             }
           })
           .catch((error) => {
+            console.log(error);
             sessionStorage.removeItem("id");
             sessionStorage.removeItem("email");
             sessionStorage.removeItem("encryptedKey");

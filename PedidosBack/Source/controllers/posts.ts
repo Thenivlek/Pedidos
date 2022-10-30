@@ -38,7 +38,8 @@ interface Post {
   body: String;
 }
 
-const Produtos: Array<Produtos> = [];
+var Produtos: Array<Produtos> = [];
+//var idproduto = Number;
 
 //Verifica a autorização---------------------------------------------
 const getAuth = async (req: Request, res: Response, next: NextFunction) => {
@@ -55,11 +56,9 @@ const getAuth = async (req: Request, res: Response, next: NextFunction) => {
       "projetoTeste"
     );
     const originalPassWord = bytesPassword.toString(CryptoJS.enc.Utf8);
-    console.log("PASSWORD", originalPassWord);
 
     let bytesEmail = CryptoJS.AES.decrypt(credenciais.email, "projetoTeste");
     const originalEmail = bytesEmail.toString(CryptoJS.enc.Utf8);
-    console.log("EMAIL ->", originalEmail);
     //Busca do usuário nos usuários criados no node
     const find = users.find((e) => {
       return originalEmail == e.email && originalPassWord == e.password;
@@ -91,7 +90,6 @@ const getAuth = async (req: Request, res: Response, next: NextFunction) => {
 
 //Retorna todos os produtos da base--------------------------------------
 const getProducts = async (req: Request, res: Response, next: NextFunction) => {
-  console.log("PRODUTOS", Produtos);
   if (Produtos.length > 0) {
     res.send(Produtos);
     res.end();
@@ -116,37 +114,49 @@ const getPost = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 // updating a post---------------------------------------------
-const updatePost = async (req: Request, res: Response, next: NextFunction) => {
-  // get the post id from the req.params
-  let id: string = req.params.id;
-  // get the data from req.body
-  let title: string = req.body.title ?? null;
-  let body: string = req.body.body ?? null;
-  // update the post
-  let response: AxiosResponse = await axios.put(
-    `https://jsonplaceholder.typicode.com/posts/${id}`,
-    {
-      ...(title && { title }),
-      ...(body && { body }),
-    }
-  );
-  // return response
-  return res.status(200).json({
-    message: response.data,
+const updateProduct = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const id = parseInt(req.params.id);
+  const body = req.body.p;
+
+  const index = Produtos.findIndex((e) => {
+    return e.id == id;
   });
+  console.log(index, "INDEXX");
+  if (index != -1) {
+    Produtos[index].cd_categoria = body.cd_categoria;
+    Produtos[index].vl_produto = body.vl_produto;
+    Produtos[index].nm_produto = body.nm_produto;
+    console.log(Produtos);
+    return res.status(200).json({
+      dados: "Produto alterado com sucesso!",
+      status: 200,
+    });
+  } else {
+    return res.status(500).json({
+      dados: "Produto não encontrado!",
+      status: 500,
+    });
+  }
 };
 
 // deleting a post---------------------------------------------
-const deletePost = async (req: Request, res: Response, next: NextFunction) => {
-  // get the post id from req.params
+const deleteProduct = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   let id: string = req.params.id;
-  // delete the post
-  let response: AxiosResponse = await axios.delete(
-    `https://jsonplaceholder.typicode.com/posts/${id}`
-  );
-  // return response
+  if (!!req.params.id) {
+    Produtos = Produtos.filter((e) => {
+      return e.id != parseInt(req.params.id);
+    });
+  }
   return res.status(200).json({
-    message: "post deleted successfully",
+    dados: "Produto excluído com sucesso!",
   });
 };
 
@@ -200,8 +210,8 @@ function getFinalId() {
 export default {
   getProducts,
   getPost,
-  updatePost,
-  deletePost,
+  updateProduct,
+  deleteProduct,
   addProduct,
   getAuth,
 };

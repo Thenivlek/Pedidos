@@ -1,74 +1,127 @@
 <template>
-  <div class="row items-center">
-    <h1 class="title margin1">Produtos</h1>
-    <button
-      @click="novoProduto = !novoProduto"
-      class="bg-primary white float-right margin1 button-add"
-    >
-      +
-    </button>
-  </div>
-  <transition name="slide-fade">
-    <div v-show="novoProduto">
-      <div class="display-block">
-        <div class="display-inline label">Nome</div>
-        <input
-          placeholder="Nome"
-          v-model="nm_produto"
-          class="input-default margin1"
-          type="text"
-        />
-      </div>
-      <div class="display-block">
-        <div class="display-inline label">R$</div>
+  <div>
+    <div class="centro">
+      <div class="esquerda">
+        <div class="row">
+          <h1 class="title margin1">Produtos</h1>
+          <button
+            @click="
+              novoProduto = true;
+              Clear();
+            "
+            class="bg-primary white float-right margin1 button-add"
+          >
+            +
+          </button>
+        </div>
+        <Transition name="bounce">
+          <div style="padding: 5px" v-show="novoProduto">
+            <div class="display-block">
+              <div class="label">Nome</div>
+              <input
+                placeholder="Nome"
+                v-model="nm_produto"
+                class="input-default"
+                type="text"
+              />
+            </div>
+            <div class="display-block">
+              <div class="label">Preço</div>
 
-        <input
-          placeholder="Preço"
-          class="input-default margin1"
-          type="number"
-          v-model="vl_produto"
-          min="0.00"
-          max="10000"
-          step="0.01"
-        />
+              <input
+                placeholder="Preço"
+                class="input-default"
+                type="number"
+                v-model="vl_produto"
+                min="0.00"
+                max="10000"
+                step="0.01"
+              />
+            </div>
+            <div class="display-block">
+              <div class="label">Categoria</div>
+              <select class="select-default" v-model="cd_categoria">
+                <option
+                  v-for="(c, index1) in categoria"
+                  :key="index1"
+                  :value="c"
+                  style="margin: 50px"
+                >
+                  {{ c.nm_categoria }}
+                </option>
+              </select>
+            </div>
+            <div class="display-block margin1">
+              <Transition name="bounce">
+                <button
+                  v-show="edit == false"
+                  style="width: 200px"
+                  @click="SaveProduto()"
+                  class="bg-primary white margin1 button-add button-save"
+                >
+                  Salvar
+                </button>
+              </Transition>
+              <Transition name="bounce">
+                <button
+                  v-show="edit == true"
+                  style="width: 200px"
+                  @click="ConfirmaEdit()"
+                  class="bg-positive white margin1 button"
+                >
+                  Confirmar
+                </button>
+              </Transition>
+              <Transition name="bounce">
+                <button
+                  v-show="edit == true"
+                  style="width: 200px"
+                  @click="CancelEdit()"
+                  class="bg-negative white margin1 button"
+                >
+                  Cancelar
+                </button>
+              </Transition>
+            </div>
+          </div>
+        </Transition>
       </div>
-      <div class="display-block">
-        <div class="display-inline label">Categoria</div>
-        <select class="margin1 select-default" v-model="cd_categoria">
-          <option v-for="(c, index1) in categoria" :key="index1" :value="c">
-            {{ c.nm_categoria }}
-          </option>
-        </select>
-      </div>
-      <div class="display-block">
-        <button
-          style="width: 200px"
-          @click="SaveProduto()"
-          class="bg-primary white margin1 button-add"
-        >
-          Salvar
-        </button>
-      </div>
-    </div>
-  </transition>
-  <div v-if="ic_nenhum_Produto">Nenhum produto encontrado!</div>
-  <div
-    v-else
-    v-for="(p, index) in produtos"
-    :key="index"
-    class="grid-container margin1"
-  >
-    <div class="grid-item">ID: {{ p.id }}</div>
-    <div class="grid-item">Produto: {{ p.nm_produto }}</div>
-    <div class="grid-item">Valor: {{ p.vl_produto }}</div>
-    <div class="grid-item">
-      Categoria: {{ p.cd_categoria }} -
-      {{ retornaCategoria(p.cd_categoria) }}
-    </div>
-    <div class="grid-item">
-      <button @click="ExcluirProduto(p)" class="btn-excluir white margin1">
-        Excluir
-      </button>
+      <Transition name="bounce">
+        <div class="direita">
+          <div class="any margin1" v-if="ic_nenhum_Produto">
+            Nenhum produto encontrado!
+          </div>
+
+          <div
+            v-else
+            v-for="(p, index) in produtos"
+            :key="index"
+            class="grid-container margin1"
+          >
+            <div class="grid-item">ID: {{ p.id }}</div>
+            <div class="grid-item">Produto: {{ p.nm_produto }}</div>
+            <div class="grid-item">Valor: {{ p.vl_produto }}</div>
+            <div class="grid-item">
+              Categoria: {{ p.cd_categoria }} -
+              {{ retornaCategoria(p.cd_categoria) }}
+            </div>
+            <div class="grid-item">
+              <button
+                @click="ExcluirProduto(p)"
+                class="btn-excluir white margin1"
+              >
+                Excluir
+              </button>
+              <button
+                @click="editarProduto(p)"
+                class="btn-alterar white margin1"
+              >
+                Editar
+              </button>
+            </div>
+          </div>
+        </div>
+      </Transition>
     </div>
   </div>
 </template>
@@ -76,18 +129,30 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import product from "../views/http/products";
+
+interface Produto {
+  [index: number]: {
+    id: number;
+    cd_categoria: number;
+    nm_produto: string;
+    vl_produto: number | number;
+  };
+}
 export default defineComponent({
   name: "ProdutosView",
   data() {
     return {
+      produtos: [] as Produto,
       novoProduto: false,
       vl_produto: 0,
       nm_produto: "",
+      idEdit: 0,
+
       cd_categoria: {
         cd_categoria: 0,
         nm_categoria: "",
       },
-      produtos: "",
+      edit: false,
       ic_nenhum_Produto: false,
       categoria: [
         {
@@ -122,15 +187,80 @@ export default defineComponent({
     this.ConsultaProdutos();
   },
   methods: {
-    async ExcluirProduto(produto: {
-      nm_produto: string;
-      vl_produto: number;
-      cd_categoria: number;
-      nm_categoria: string;
-    }) {
-      console.log(produto);
+    Clear() {
+      this.vl_produto = 0;
+      this.nm_produto = "";
+      this.idEdit = 0;
+
+      this.cd_categoria = {
+        cd_categoria: 0,
+        nm_categoria: "",
+      };
+      this.edit = false;
     },
-    retornaCategoria(e: number) {
+
+    async CancelEdit() {
+      this.novoProduto = false;
+      this.Clear();
+    },
+    async ConfirmaEdit() {
+      if (
+        !!this.idEdit ||
+        !!this.nm_produto ||
+        !!this.cd_categoria ||
+        !!this.vl_produto
+      ) {
+        const produto = {
+          nm_produto: this.nm_produto,
+          vl_produto: this.vl_produto,
+          cd_categoria: this.cd_categoria.cd_categoria,
+          nm_categoria: this.cd_categoria.nm_categoria,
+          id: this.idEdit,
+        };
+        try {
+          const envio = await product.editProduct(produto);
+          if (envio.status == 500) {
+            alert(envio.dados);
+          }
+        } catch (error) {
+          alert("Impossível editar produto");
+        }
+      } else {
+        alert("Confira as informações!");
+      }
+    },
+    async editarProduto(p: {
+      id: number;
+      cd_categoria: number;
+      nm_produto: string;
+      vl_produto: number | number;
+    }) {
+      this.nm_produto = p.nm_produto;
+      this.vl_produto = p.vl_produto;
+
+      const cat = this.categoria.find((e) => {
+        return e.cd_categoria == p.cd_categoria;
+      });
+      if (cat) {
+        this.cd_categoria.cd_categoria = cat.cd_categoria;
+        this.cd_categoria.nm_categoria = cat.nm_categoria;
+      }
+      this.idEdit = p.id;
+      console.log(this.idEdit);
+      this.edit = true;
+      this.novoProduto = true;
+    },
+    async ExcluirProduto(p: {
+      id: number;
+      cd_categoria: string | number;
+      nm_produto: string;
+      vl_produto: number | number;
+    }) {
+      this.Clear();
+      await product.deleteProduct(p);
+      await this.ConsultaProdutos();
+    },
+    retornaCategoria(e: number | string) {
       const categoria = this.categoria.filter((element) => {
         return element.cd_categoria == e;
       });
@@ -147,8 +277,6 @@ export default defineComponent({
       this.produtos = a.data;
     },
     async SaveProduto() {
-      console.log(this.cd_categoria);
-
       const produto = {
         nm_produto: this.nm_produto,
         vl_produto: this.vl_produto,
@@ -161,29 +289,45 @@ export default defineComponent({
         !!produto.vl_produto == false ||
         !!produto.cd_categoria == false
       ) {
-        console.log("Erro");
+        alert("Confira as informações!");
+        return;
       } else {
         // noinspection TypeScriptValidateTypes
 
-        const envio = await product.SaveProduct(produto);
+        await product.SaveProduct(produto);
       }
+      alert("Produto inserido com sucesso!");
       this.ConsultaProdutos();
     },
-    FormataMoeda(vl = Number) {
-      console.log(vl);
-      //let f = vl.toLocaleString("pt-br", {
-      //  style: "currency",
-      //  currency: "BRL",
-      //});
-
-      //console.log(f.replaceAll("R$", ""));
-      //this.vl_produto = f.replaceAll("R$", "");
-      return 0;
-    },
+    //FormataMoeda(vl = Number) {
+    //  //let f = vl.toLocaleString("pt-br", {
+    //  //  style: "currency",
+    //  //  currency: "BRL",
+    //  //});
+    //
+    //  //this.vl_produto = f.replaceAll("R$", "");
+    //  return 0;
+    //},
   },
 });
 </script>
 
 <style>
 @import url("./Views.css");
+.centro {
+  display: flex;
+}
+.esquerda {
+  width: 30%;
+  height: auto;
+}
+.direita {
+  width: 70%;
+  min-height: 200px;
+  height: auto;
+}
+.any {
+  font-size: 22px;
+  text-align: center;
+}
 </style>
