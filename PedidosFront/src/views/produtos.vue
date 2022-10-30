@@ -2,7 +2,13 @@
   <div>
     <div class="centro">
       <div class="esquerda">
-        <div class="row">
+        <div class="row items-center" style="justify-content: center">
+          <button
+            @click="Painel()"
+            class="bg-primary white float-right margin1 button-add"
+          >
+            Voltar
+          </button>
           <h1 class="title margin1">Produtos</h1>
           <button
             @click="
@@ -31,7 +37,8 @@
               <input
                 placeholder="Preço"
                 class="input-default"
-                type="number"
+                type="text"
+                @blur="FormataMoeda(vl_produto, 1)"
                 v-model="vl_produto"
                 min="0.00"
                 max="10000"
@@ -51,7 +58,7 @@
                 </option>
               </select>
             </div>
-            <div class="display-block margin1">
+            <div class="display-block items-center margin1">
               <Transition name="bounce">
                 <button
                   v-show="edit == false"
@@ -129,6 +136,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import product from "../views/http/products";
+import funcao from "../ts/funcoes";
 
 interface Produto {
   [index: number]: {
@@ -138,13 +146,14 @@ interface Produto {
     vl_produto: number | number;
   };
 }
+
 export default defineComponent({
   name: "ProdutosView",
   data() {
     return {
       produtos: [] as Produto,
       novoProduto: false,
-      vl_produto: 0,
+      vl_produto: "",
       nm_produto: "",
       idEdit: 0,
 
@@ -187,8 +196,23 @@ export default defineComponent({
     this.ConsultaProdutos();
   },
   methods: {
+    async FormataMoeda(vl: string, index: number) {
+      if (index == 1) {
+        let strNum = parseInt(vl.replace(/[^0-9]/g, ""));
+
+        this.vl_produto = strNum.toLocaleString("pt-br", {
+          style: "currency",
+          currency: "BRL",
+        });
+
+        //this.vl_produto = await funcao.FormataMoeda(vl);
+      }
+    },
+    Painel() {
+      this.$router.push("/painel");
+    },
     Clear() {
-      this.vl_produto = 0;
+      this.vl_produto = "";
       this.nm_produto = "";
       this.idEdit = 0;
 
@@ -228,12 +252,13 @@ export default defineComponent({
       } else {
         alert("Confira as informações!");
       }
+      this.ConsultaProdutos();
     },
     async editarProduto(p: {
       id: number;
       cd_categoria: number;
       nm_produto: string;
-      vl_produto: number | number;
+      vl_produto: string;
     }) {
       this.nm_produto = p.nm_produto;
       this.vl_produto = p.vl_produto;
@@ -246,7 +271,6 @@ export default defineComponent({
         this.cd_categoria.nm_categoria = cat.nm_categoria;
       }
       this.idEdit = p.id;
-      console.log(this.idEdit);
       this.edit = true;
       this.novoProduto = true;
     },
@@ -254,7 +278,7 @@ export default defineComponent({
       id: number;
       cd_categoria: string | number;
       nm_produto: string;
-      vl_produto: number | number;
+      vl_produto: string;
     }) {
       this.Clear();
       await product.deleteProduct(p);
@@ -299,33 +323,13 @@ export default defineComponent({
       alert("Produto inserido com sucesso!");
       this.ConsultaProdutos();
     },
-    //FormataMoeda(vl = Number) {
-    //  //let f = vl.toLocaleString("pt-br", {
-    //  //  style: "currency",
-    //  //  currency: "BRL",
-    //  //});
-    //
-    //  //this.vl_produto = f.replaceAll("R$", "");
-    //  return 0;
-    //},
   },
 });
 </script>
 
 <style>
 @import url("./Views.css");
-.centro {
-  display: flex;
-}
-.esquerda {
-  width: 30%;
-  height: auto;
-}
-.direita {
-  width: 70%;
-  min-height: 200px;
-  height: auto;
-}
+
 .any {
   font-size: 22px;
   text-align: center;

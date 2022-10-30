@@ -1,5 +1,5 @@
 <template>
-  <div class="father">
+  <div class="father container-box">
     <div class="card">
       <div class="center marginP">
         <img
@@ -106,7 +106,6 @@ export default {
             }
           })
           .catch((error) => {
-            console.log(error);
             sessionStorage.removeItem("id");
             sessionStorage.removeItem("email");
             sessionStorage.removeItem("encryptedKey");
@@ -130,14 +129,23 @@ export default {
 <style scoped>
 .father {
   color: black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+.container-box {
+  height: auto;
 }
 .card {
   background: rgb(223, 223, 223);
   border-radius: 20px;
   padding: 50px;
   text-align: center;
-  align-items: center;
-  align-content: center;
+  align-items: center center;
+  align-content: center center;
+
+  text-align: center;
 }
 .text-center {
   text-align: center;

@@ -24,7 +24,16 @@ const users = [
     password: "yahoo123",
   },
 ];
-
+interface Order {
+  length: number;
+  user: number;
+  [index: number]: {
+    id: number;
+    cd_categoria: number;
+    nm_produto: string;
+    vl_produto: number | number;
+  };
+}
 interface Produtos {
   id: number;
   cd_categoria: string;
@@ -39,7 +48,7 @@ interface Post {
 }
 
 var Produtos: Array<Produtos> = [];
-//var idproduto = Number;
+var Orders: Array<Order> = [];
 
 //Verifica a autorização---------------------------------------------
 const getAuth = async (req: Request, res: Response, next: NextFunction) => {
@@ -99,21 +108,32 @@ const getProducts = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-// getting a single post---------------------------------------------
-const getPost = async (req: Request, res: Response, next: NextFunction) => {
-  // get the post id from the req
-  let id: string = req.params.id;
-  // get the post
-  let result: AxiosResponse = await axios.get(
-    `https://jsonplaceholder.typicode.com/posts/${id}`
-  );
-  let post: Post = result.data;
-  return res.status(200).json({
-    message: post,
-  });
+// Pesquisa de Produtos por nome---------------------------------------------
+const getProduct = async (req: Request, res: Response, next: NextFunction) => {
+  const name = req.body.params.nm_produto.toUpperCase();
+  let encontrados = [];
+
+  if (Produtos.length > 0) {
+    for (let a = 0; a < Produtos.length; a++) {
+      Produtos[a].nm_produto.toUpperCase().indexOf(name);
+      if (Produtos[a].nm_produto.toUpperCase().indexOf(name) != -1) {
+        encontrados.push(Produtos[a]);
+      }
+    }
+  } else {
+    return res.status(500).json({ dados: "Nenhum produto cadastrado!" });
+  }
+
+  if (encontrados.length > 0) {
+    return res.status(200).json(encontrados);
+  } else {
+    return res
+      .status(500)
+      .json({ dados: "Nenhum produto encontrado", status: 500 });
+  }
 };
 
-// updating a post---------------------------------------------
+// Atualizando um produto---------------------------------------------
 const updateProduct = async (
   req: Request,
   res: Response,
@@ -125,12 +145,11 @@ const updateProduct = async (
   const index = Produtos.findIndex((e) => {
     return e.id == id;
   });
-  console.log(index, "INDEXX");
+
   if (index != -1) {
     Produtos[index].cd_categoria = body.cd_categoria;
     Produtos[index].vl_produto = body.vl_produto;
     Produtos[index].nm_produto = body.nm_produto;
-    console.log(Produtos);
     return res.status(200).json({
       dados: "Produto alterado com sucesso!",
       status: 200,
@@ -143,7 +162,7 @@ const updateProduct = async (
   }
 };
 
-// deleting a post---------------------------------------------
+// Deletando um produto---------------------------------------------
 const deleteProduct = async (
   req: Request,
   res: Response,
@@ -190,8 +209,32 @@ const addProduct = async (req: Request, res: Response, next: NextFunction) => {
     res.end();
   }
 };
+//Adicionando um pedido--------------------------------------------------
+const newOrder = async (req: Request, res: Response, next: NextFunction) => {
+  const orders = req.body.order;
+  const user = req.body.user;
+  if (!!user) {
+    Orders.push(orders);
 
-//Busca o ultimo Id de produto cadastrado
+    res.status(200).send({ dados: "Pedido gravado com sucesso!", status: 200 });
+    res.end();
+  } else {
+    res.status(500).send({ dados: "Impossível gravar o pedido!", status: 500 });
+    res.end();
+  }
+};
+//Consulta de todas as orders-------------------------------------------
+const getOrders = async (req: Request, res: Response, next: NextFunction) => {
+  if (Orders.length > 0) {
+    res.status(200).send(Orders);
+    res.end();
+  } else {
+    res.status(500).send({ dados: "Nenhuma ordem encontrada!", status: 500 });
+    res.end();
+  }
+};
+
+//Busca o ultimo Id de produto cadastrado-------------------------------
 function getFinalId() {
   let final = 0;
   //Verifica se existe algum produto, se não existir retorna o id = 0
@@ -206,12 +249,15 @@ function getFinalId() {
   }
   return final;
 }
+//-----------------------------------------------------------------------
 
 export default {
   getProducts,
-  getPost,
+  getProduct,
   updateProduct,
   deleteProduct,
   addProduct,
   getAuth,
+  newOrder,
+  getOrders,
 };

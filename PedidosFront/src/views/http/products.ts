@@ -3,11 +3,12 @@ const httpNewProduct = "http://localhost:6060/posts/product";
 const httpAllProducts = "http://localhost:6060/posts/products";
 const httpDeleteProduct = "http://localhost:6060/posts/";
 const httpEditProduct = "http://localhost:6060/posts/";
+const httpSearchProduct = "http://localhost:6060/posts/search";
 export default {
-  //Salva um novo produto
+  //Salva um novo produto------------------------
   async SaveProduct(product: {
     nm_produto: string;
-    vl_produto: number;
+    vl_produto: string;
     cd_categoria: number;
     nm_categoria: string;
   }) {
@@ -35,7 +36,7 @@ export default {
       });
     return retorno;
   },
-  //Consulta todos os produtos
+  //Consulta todos os produtos---------------------
   async getProdutos() {
     return await axios
       .get(httpAllProducts)
@@ -46,12 +47,12 @@ export default {
         return error;
       });
   },
-  //Deleta um produto
+  //Deleta um produto------------------------------
   async deleteProduct(p: {
     id: number;
     cd_categoria: string | number;
     nm_produto: string;
-    vl_produto: number | number;
+    vl_produto: string;
   }) {
     return await axios
       .delete(httpDeleteProduct + p.id)
@@ -62,9 +63,10 @@ export default {
         return error;
       });
   },
+  //Edita um produto----------------------------
   async editProduct(p: {
     nm_produto: string;
-    vl_produto: number;
+    vl_produto: string;
     cd_categoria: number;
     nm_categoria: string;
     id: number;
@@ -78,6 +80,21 @@ export default {
       })
       .catch((error) => {
         return error.response.data;
+      });
+  },
+  //Pesquisa um produto pelo nome----------------------------
+  async SearchProduct(name: string) {
+    return await axios
+      .post(httpSearchProduct, {
+        params: {
+          nm_produto: name,
+        },
+      })
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        return error.response;
       });
   },
 };
