@@ -27,9 +27,11 @@
 <br/>
 **Será necessário utilizar o comando 'npm install --global yarn' para instalar o yarn de forma global.**
 <br/>
-**Após a instalação do yarn será necessário instalar o Vue com 'npm install vue'**
+**Após a instalação do yarn será necessário instalar o Vue com 'npm install vue'.**
 <br/>
-**Dentro de cada uma das pastas Front-End e Back-end será necessário utilizar o comando 'yarn install' para instalar as dependências do projeto**
+**Dentro de cada uma das pastas Front-End e Back-end será necessário utilizar o comando 'yarn install' para instalar as dependências do projeto.**
+<br/>
+**Após todas as instalações todos os atalhos funcionarão normalmente**
 
 **Versão do NodeJs: v16.18.0**
 <br/>
