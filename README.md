@@ -9,6 +9,7 @@
 # :hammer: Atalhos do projeto
 
 `back-end.bat`: Inicia o serviço de back-end via cmd.
+<br/>
 `front-end.bat`: Inicia o serviço de front-end via cmd.
 `vs.bat`: Inicia o front-end dentro do VsCode.
 `vsBack.bat`: Inicia o back-end dentro do VsCode.
