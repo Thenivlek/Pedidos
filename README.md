@@ -45,4 +45,5 @@
 
 # Contato
 
-**kelvin_piantino@hotmail.com - (13) 99170-3596**
+**kelvin_piantino@hotmail.com**
+**https://wa.me/5513991703596**
