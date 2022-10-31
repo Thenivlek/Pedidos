@@ -6,13 +6,20 @@
 `Funcionalidade 1`: CRUD de Produtos
 `Funcionalidade 2`: CRUD de Pedidos
 
+# :hammer: Atalhos do projeto
+
+`back-end.bat`: Inicia o serviço de back-end via cmd.
+`front-end.bat`: Inicia o serviço de front-end via cmd.
+`vs.bat`: Inicia o front-end dentro do VsCode.
+`vsBack.bat`: Inicia o back-end dentro do VsCode.
+
 # 📁 Acesso ao projeto
 
 **https://github.com/Thenivlek/Pedidos**
 
 # 🛠️ Abrir e rodar o projeto
 
-**A estrutura de pasta é separada por Front-End (PedidosFront) e Back-End(PedidosBack), para que o projeto funcione é necessário que o Back-End esteja inicializado**
+**A estrutura de pasta é separada por Front-End (PedidosFront) e Back-End(PedidosBack), para que o projeto funcione é necessário que o Back-End esteja inicializado.**
 
 ---
 
