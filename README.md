@@ -6,9 +6,13 @@
 `Funcionalidade 1`: CRUD de Produtos
 `Funcionalidade 2`: CRUD de Pedidos
 
-# 📁 Acesso ao projeto **https://github.com/Thenivlek/Pedidos**
+# 📁 Acesso ao projeto
 
-# 🛠️ Abrir e rodar o projeto **Apresente as instruções necessárias para abrir e executar o projeto**
+**https://github.com/Thenivlek/Pedidos**
+
+# 🛠️ Abrir e rodar o projeto
+
+**O projeto foi feito**
 
 # Referências
 
