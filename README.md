@@ -3,9 +3,9 @@
 
 # :hammer: Funcionalidades do projeto
 
-`Funcionalidade 1`: CRUD de Produtos
+`Funcionalidade 1`: CRUD de Produtos.
 <br/>
-`Funcionalidade 2`: CRUD de Pedidos
+`Funcionalidade 2`: CRUD de Pedidos.
 
 # :hammer: Atalhos do projeto
 
@@ -24,10 +24,12 @@
 # 🛠️ Abrir e rodar o projeto
 
 **A estrutura de pasta é separada por Front-End (PedidosFront) e Back-End(PedidosBack), para que o projeto funcione é necessário que o Back-End esteja inicializado.**
+<br/>
 
 ---
 
 **Versão do NodeJs: v16.18.0**
+<br/>
 **Versão do VueJs: @vue/cli 5.0.8**
 
 # Referências
