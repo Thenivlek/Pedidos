@@ -11,7 +11,9 @@
 `back-end.bat`: Inicia o serviço de back-end via cmd.
 <br/>
 `front-end.bat`: Inicia o serviço de front-end via cmd.
+<br/>
 `vs.bat`: Inicia o front-end dentro do VsCode.
+<br/>
 `vsBack.bat`: Inicia o back-end dentro do VsCode.
 
 # 📁 Acesso ao projeto
