@@ -12,7 +12,12 @@
 
 # 🛠️ Abrir e rodar o projeto
 
-**O projeto foi feito**
+**A estrutura de pasta é separada por Front-End (PedidosFront) e Back-End(PedidosBack), para que o projeto funcione é necessário que o Back-End esteja inicializado**
+
+---
+
+**Versão do NodeJs: v16.18.0**
+**Versão do VueJs: @vue/cli 5.0.8**
 
 # Referências
 
