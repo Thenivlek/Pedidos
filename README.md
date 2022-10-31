@@ -4,6 +4,7 @@
 # :hammer: Funcionalidades do projeto
 
 `Funcionalidade 1`: CRUD de Produtos
+<br/>
 `Funcionalidade 2`: CRUD de Pedidos
 
 # :hammer: Atalhos do projeto
