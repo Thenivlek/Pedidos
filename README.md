@@ -1,4 +1,4 @@
-<h1 align="center"> Projeto - Pedidos </h1>
+<h1 align="center"> Projeto - Orders </h1>
 <h4 align="center">:construction:  Projeto em construção  :construction:</h4>
 
 # :hammer: Funcionalidades do projeto
