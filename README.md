@@ -42,3 +42,7 @@
 # https://www.npmjs.com/package/crypto-js
 
 # https://www.npmjs.com/package/axios
+
+# Contato
+
+**kelvin_piantino@hotmail.com - (13) 99170-3596**
