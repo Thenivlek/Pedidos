@@ -2,24 +2,26 @@
   <div>
     <div class="row items-center">
       <h1 class="title margin1">Painel de Pedidos</h1>
+      <Transition name="bounce">
+        <button
+          @click="AddPedido()"
+          v-if="novoPedido == false"
+          class="bg-primary white float-right margin1 button-add"
+        >
+          Novo Pedido
+        </button>
 
-      <button
-        @click="AddPedido()"
-        v-if="novoPedido == false"
-        class="bg-primary white float-right margin1 button-add"
-      >
-        Novo Pedido
-      </button>
-      <button
-        @click="
-          novoPedido = false;
-          carregaDados();
-        "
-        v-else
-        class="bg-primary white float-right margin1 button-add"
-      >
-        Consultar Pedidos
-      </button>
+        <button
+          @click="
+            novoPedido = false;
+            carregaDados();
+          "
+          v-else
+          class="bg-primary white float-right margin1 button-add"
+        >
+          Consultar Pedidos
+        </button>
+      </Transition>
       <button
         @click="AdicionaProduto()"
         class="bg-primary white float-right margin1 button-add"
@@ -84,7 +86,15 @@
         class="margin1 grid-pedido card"
         style="height: 35vh; overflow-y: scroll; min-width: 200px"
       >
-        <div style="font-size: 22px">Pedido: {{ indexP + 1 }}</div>
+        <div class="row items-center" style="font-size: 22px">
+          Pedido: {{ indexP + 1 }}
+          <!--
+             <button @click="ExcluirPedido(p)" class="btn-excluir white margin1">
+            Excluir
+          </button>
+          -->
+        </div>
+
         <!--<H1>PEDIDO - {{ indexP + 1 }}</H1>-->
         <div
           class="grid-items-pedido margin1"
@@ -124,13 +134,15 @@
           </button>
         </div>
         <div class="row items-center" style="justify-content: center">
-          <button
-            v-show="carrinho.length > 0"
-            @click="FecharPedido()"
-            class="bg-positive white button-add margin1"
-          >
-            Fechar Pedido
-          </button>
+          <Transition name="bounce">
+            <button
+              v-show="carrinho.length > 0"
+              @click="FecharPedido()"
+              class="bg-positive white button-add margin1"
+            >
+              Fechar Pedido
+            </button>
+          </Transition>
         </div>
       </div>
     </div>
@@ -173,6 +185,7 @@ interface CarrinhoInterface {
 
 interface PedidosInterface {
   vl_pedido: number | number;
+  idOrder: number;
   [index: number]: {
     id: number;
     cd_categoria: number;
@@ -250,6 +263,18 @@ export default defineComponent({
   },
 
   methods: {
+    async ExcluirPedido(p: {
+      vl_pedido: number | number;
+      idOrder: number;
+      [index: number]: {
+        id: number;
+        cd_categoria: number;
+        nm_produto: string;
+        vl_produto: number | number;
+      };
+    }) {
+      console.log(p);
+    },
     async LogOut() {
       sessionStorage.removeItem("id");
       sessionStorage.removeItem("email");

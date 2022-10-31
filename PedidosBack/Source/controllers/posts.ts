@@ -27,6 +27,7 @@ const users = [
 interface Order {
   length: number;
   user: number;
+  idOrder: number;
   [index: number]: {
     id: number;
     cd_categoria: number;
@@ -233,6 +234,27 @@ const getOrders = async (req: Request, res: Response, next: NextFunction) => {
     res.end();
   }
 };
+//Delete do pedido-------------------------------------------
+const deleteOrder = async (req: Request, res: Response, next: NextFunction) => {
+  let id: number = parseInt(req.params.id);
+  if (Orders.length > 0) {
+    const find = Orders.find((e) => {
+      return e.idOrder == id;
+    });
+    if (!!find) {
+      Orders = Orders.filter((e) => {
+        return e.idOrder != find.idOrder;
+      });
+      res
+        .status(200)
+        .send({ dados: "Ordem excluída com sucesso!", status: 200 });
+    } else {
+      res.status(500).send({ dados: "Ordem não encontrada", status: 500 });
+    }
+  } else {
+    res.status(500).send({ dados: "Ordem não encontrada", status: 500 });
+  }
+};
 
 //Busca o ultimo Id de produto cadastrado-------------------------------
 function getFinalId() {
@@ -260,4 +282,5 @@ export default {
   getAuth,
   newOrder,
   getOrders,
+  deleteOrder,
 };

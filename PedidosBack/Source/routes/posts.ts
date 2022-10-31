@@ -10,5 +10,6 @@ router.get("/posts/products", controller.getProducts);
 router.get("/posts/orders/:id", controller.getOrders);
 router.put("/posts/:id", controller.updateProduct);
 router.delete("/posts/:id", controller.deleteProduct);
+router.delete("/posts/order/:id", controller.deleteOrder);
 
 export = router;
