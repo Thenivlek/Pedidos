@@ -33,7 +33,9 @@
 <br/>
 **Após todas as instalações todos os atalhos funcionarão normalmente**
 
-**Versão do NodeJs: v16.18.0**
+**Versão do NodeJs para o Front-End: v18.16.0**
+
+**Versão do NodeJs para o Back-end: v10.24.1**
 <br/>
 **Versão do VueJs: @vue/cli 5.0.8**
 
