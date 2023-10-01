@@ -25,6 +25,8 @@
 
 **A estrutura de pasta é separada por Front-End (PedidosFront) e Back-End(PedidosBack), para que o projeto funcione é necessário que o Back-End esteja inicializado.**
 <br/>
+**Para o controle de versionamento do NodeJs será necessário usar o NVM (Node Version Manager)**
+<br/>
 **Será necessário utilizar o comando 'npm install --global yarn' para instalar o yarn de forma global.**
 <br/>
 **Após a instalação do yarn será necessário instalar o Vue com 'npm install vue'.**
@@ -50,3 +52,5 @@
 **kelvin_piantino@hotmail.com**
 <br/>
 **https://wa.me/5513991703596**
+<br/>
+**https://github.com/nvm-sh/nvm/blob/master/README.md**
